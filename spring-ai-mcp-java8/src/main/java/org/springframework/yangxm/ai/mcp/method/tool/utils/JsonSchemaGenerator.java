@@ -15,8 +15,13 @@ import com.github.victools.jsonschema.module.jackson.JacksonModule;
 import com.github.victools.jsonschema.module.jackson.JacksonOption;
 import com.github.victools.jsonschema.module.swagger2.Swagger2Module;
 import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema;
+import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema.CallToolRequest;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpAsyncServerExchange;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpSyncServerExchange;
+import org.springframework.yangxm.ai.mcp.annotation.McpToolParam;
+import org.springframework.yangxm.ai.util.Assert;
+import org.springframework.yangxm.ai.util.JsonParser;
+import org.springframework.yangxm.ai.util.Utils;
 import reactor.util.annotation.Nullable;
 
 import java.lang.reflect.Method;
@@ -67,7 +72,7 @@ public class JsonSchemaGenerator {
     private static String internalGenerateFromMethodArguments(Method method) {
         // Check if method has CallToolRequest parameter
         boolean hasCallToolRequestParam = Arrays.stream(method.getParameterTypes())
-                .anyMatch(type -> McpSchema.CallToolRequest.class.isAssignableFrom(type));
+                .anyMatch(CallToolRequest.class::isAssignableFrom);
 
         // If method has CallToolRequest, return minimal schema
         if (hasCallToolRequestParam) {
@@ -76,7 +81,7 @@ public class JsonSchemaGenerator {
             // @McpProgressToken annotated parameters, and McpMeta parameters
             boolean hasOtherParams = Arrays.stream(method.getParameters()).anyMatch(param -> {
                 Class<?> type = param.getType();
-                return !McpSchema.CallToolRequest.class.isAssignableFrom(type)
+                return !CallToolRequest.class.isAssignableFrom(type)
                         && !McpSyncServerExchange.class.isAssignableFrom(type)
                         && !McpAsyncServerExchange.class.isAssignableFrom(type)
                         && !param.isAnnotationPresent(McpProgressToken.class) && !McpMeta.class.isAssignableFrom(type);
@@ -173,62 +178,32 @@ public class JsonSchemaGenerator {
         return jsonSchema.toPrettyString();
     }
 
-    /**
-     * Check if a method has a CallToolRequest parameter.
-     *
-     * @param method The method to check
-     * @return true if the method has a CallToolRequest parameter, false otherwise
-     */
     public static boolean hasCallToolRequestParameter(Method method) {
-        return Arrays.stream(method.getParameterTypes()).anyMatch(type -> CallToolRequest.class.isAssignableFrom(type));
+        return Arrays.stream(method.getParameterTypes()).anyMatch(CallToolRequest.class::isAssignableFrom);
     }
 
     private static boolean isMethodParameterRequired(Method method, int index) {
         Parameter parameter = method.getParameters()[index];
 
-        var toolParamAnnotation = parameter.getAnnotation(McpToolParam.class);
+        McpToolParam toolParamAnnotation = parameter.getAnnotation(McpToolParam.class);
         if (toolParamAnnotation != null) {
             return toolParamAnnotation.required();
         }
 
-        var propertyAnnotation = parameter.getAnnotation(JsonProperty.class);
-        if (propertyAnnotation != null) {
-            return propertyAnnotation.required();
-        }
-
-        var schemaAnnotation = parameter.getAnnotation(Schema.class);
-        if (schemaAnnotation != null) {
-            return schemaAnnotation.requiredMode() == Schema.RequiredMode.REQUIRED
-                    || schemaAnnotation.requiredMode() == Schema.RequiredMode.AUTO || schemaAnnotation.required();
-        }
-
-        var nullableAnnotation = parameter.getAnnotation(Nullable.class);
+        Nullable nullableAnnotation = parameter.getAnnotation(Nullable.class);
         if (nullableAnnotation != null) {
             return false;
         }
-
         return PROPERTY_REQUIRED_BY_DEFAULT;
     }
 
     private static String getMethodParameterDescription(Method method, int index) {
         Parameter parameter = method.getParameters()[index];
 
-        var toolParamAnnotation = parameter.getAnnotation(McpToolParam.class);
+        McpToolParam toolParamAnnotation = parameter.getAnnotation(McpToolParam.class);
         if (toolParamAnnotation != null && Utils.hasText(toolParamAnnotation.description())) {
             return toolParamAnnotation.description();
         }
-
-        var jacksonAnnotation = parameter.getAnnotation(JsonPropertyDescription.class);
-        if (jacksonAnnotation != null && Utils.hasText(jacksonAnnotation.value())) {
-            return jacksonAnnotation.value();
-        }
-
-        var schemaAnnotation = parameter.getAnnotation(Schema.class);
-        if (schemaAnnotation != null && Utils.hasText(schemaAnnotation.description())) {
-            return schemaAnnotation.description();
-        }
-
         return null;
     }
-
 }
