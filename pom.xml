@@ -23,6 +23,7 @@
     <properties>
         <java.version>1.8</java.version>
         <project.encoding>UTF-8</project.encoding>
+        <jsonschema.version>4.38.0</jsonschema.version>
     </properties>
 
     <dependencyManagement>
@@ -69,6 +70,25 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.17.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.victools</groupId>
+                <artifactId>jsonschema-module-swagger-2</artifactId>
+                <version>${jsonschema.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.victools</groupId>
+                <artifactId>jsonschema-generator</artifactId>
+                <version>${jsonschema.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.github.victools</groupId>
+                <artifactId>jsonschema-module-jackson</artifactId>
+                <version>${jsonschema.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

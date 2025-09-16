@@ -6,6 +6,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.yangxm.ai.mcp.annotation.McpComplete;
+import org.springframework.yangxm.ai.mcp.annotation.McpPrompt;
+import org.springframework.yangxm.ai.mcp.annotation.McpResource;
 import org.springframework.yangxm.ai.mcp.annotation.McpTool;
 import org.springframework.yangxm.ai.mcp.annotation.spring.scan.AbstractAnnotatedMethodBeanPostProcessor;
 import org.springframework.yangxm.ai.mcp.annotation.spring.scan.AbstractMcpAnnotatedBeans;
@@ -25,8 +28,9 @@ import java.util.Set;
 )
 @EnableConfigurationProperties(McpServerAnnotationScannerProperties.class)
 public class McpServerAnnotationScannerAutoConfiguration {
-    // TODO: Support McpResource.class, McpPrompt.class, McpComplete.class
-    private static final Set<Class<? extends Annotation>> SERVER_MCP_ANNOTATIONS = Sets.of(McpTool.class);
+    private static final Set<Class<? extends Annotation>> SERVER_MCP_ANNOTATIONS = Sets.of(
+            McpTool.class, McpResource.class, McpPrompt.class, McpComplete.class
+    );
 
     @Bean
     @ConditionalOnMissingBean
