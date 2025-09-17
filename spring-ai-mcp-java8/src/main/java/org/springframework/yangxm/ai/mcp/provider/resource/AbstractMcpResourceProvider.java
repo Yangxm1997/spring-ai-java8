@@ -11,8 +11,6 @@ import java.util.List;
 public abstract class AbstractMcpResourceProvider {
     protected final List<Object> resourceObjects;
 
-    protected McpJsonMapper jsonMapper = McpJsonMapper.createDefault();
-
     public AbstractMcpResourceProvider(List<Object> resourceObjects) {
         Assert.notNull(resourceObjects, "resourceObjects cannot be null");
         this.resourceObjects = resourceObjects;
@@ -24,14 +22,6 @@ public abstract class AbstractMcpResourceProvider {
 
     protected McpResource doGetMcpResourceAnnotation(Method method) {
         return method.getAnnotation(McpResource.class);
-    }
-
-    public void setJsonMapper(McpJsonMapper jsonMapper) {
-        this.jsonMapper = jsonMapper;
-    }
-
-    public McpJsonMapper getJsonMapper() {
-        return this.jsonMapper;
     }
 
     static String getName(Method method, McpResource resource) {

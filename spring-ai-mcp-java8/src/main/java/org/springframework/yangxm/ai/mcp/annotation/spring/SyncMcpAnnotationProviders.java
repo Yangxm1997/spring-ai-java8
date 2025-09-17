@@ -1,8 +1,11 @@
 package org.springframework.yangxm.ai.mcp.annotation.spring;
 
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures;
+import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.SyncPromptSpec;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.SyncResourceSpec;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.SyncToolSpec;
+import org.springframework.yangxm.ai.mcp.provider.prompt.SyncMcpPromptProvider;
+import org.springframework.yangxm.ai.mcp.provider.resource.SyncMcpResourceProvider;
 import org.springframework.yangxm.ai.mcp.provider.tool.SyncMcpToolProvider;
 
 import java.lang.reflect.Method;
@@ -13,13 +16,18 @@ public final class SyncMcpAnnotationProviders {
     }
 
     // TOOLS
-    public static List<SyncToolSpec> toolSpecifications(List<Object> toolObjects) {
-        return new SpringAiSyncToolProvider(toolObjects).getToolSpecifications();
+    public static List<SyncToolSpec> toolSpecs(List<Object> toolObjects) {
+        return new SpringAiSyncToolProvider(toolObjects).getToolSpecs();
     }
 
     // RESOURCE
-    public static List<SyncResourceSpec> resourceSpecifications(List<Object> resourceObjects) {
-        return new SpringAiSyncMcpResourceProvider(resourceObjects).getResourceSpecifications();
+    public static List<SyncResourceSpec> resourceSpecs(List<Object> resourceObjects) {
+        return new SpringAiSyncMcpResourceProvider(resourceObjects).getResourceSpecs();
+    }
+
+    // PROMPT
+    public static List<SyncPromptSpec> promptSpecs(List<Object> promptObjects) {
+        return new SpringAiSyncMcpPromptProvider(promptObjects).getPromptSpecs();
     }
 
 
@@ -40,6 +48,19 @@ public final class SyncMcpAnnotationProviders {
 
         private SpringAiSyncMcpResourceProvider(List<Object> resourceObjects) {
             super(resourceObjects);
+        }
+
+        @Override
+        protected Method[] doGetClassMethods(Object bean) {
+            return AnnotationProviderUtil.beanMethods(bean);
+        }
+    }
+
+    // PROMPT
+    private final static class SpringAiSyncMcpPromptProvider extends SyncMcpPromptProvider {
+
+        private SpringAiSyncMcpPromptProvider(List<Object> promptObjects) {
+            super(promptObjects);
         }
 
         @Override

@@ -1,7 +1,6 @@
 package org.springframework.yangxm.ai.mcp.method.resource;
 
 import io.modelcontextprotocol.yangxm.ai.mcp.common.McpUriTemplateManager;
-import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema;
 import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema.ReadResourceRequest;
 import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema.Resource;
 import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema.ResourceTemplate;

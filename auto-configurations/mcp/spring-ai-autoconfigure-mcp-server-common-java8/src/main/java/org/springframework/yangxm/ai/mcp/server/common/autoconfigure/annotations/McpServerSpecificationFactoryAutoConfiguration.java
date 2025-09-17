@@ -1,6 +1,5 @@
 package org.springframework.yangxm.ai.mcp.server.common.autoconfigure.annotations;
 
-import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.SyncToolSpec;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -38,7 +37,7 @@ public class McpServerSpecificationFactoryAutoConfiguration {
     static class SyncServerSpecificationConfiguration {
         @Bean
         public List<SyncToolSpec> toolSpecs(ServerMcpAnnotatedBeans beansWithMcpMethodAnnotations) {
-            return SyncMcpAnnotationProviders.toolSpecifications(beansWithMcpMethodAnnotations.getBeansByAnnotation(McpTool.class));
+            return SyncMcpAnnotationProviders.toolSpecs(beansWithMcpMethodAnnotations.getBeansByAnnotation(McpTool.class));
         }
     }
 }

@@ -8,7 +8,6 @@ import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.SyncResourceSpec;
 import org.springframework.yangxm.ai.mcp.annotation.McpResource;
 import org.springframework.yangxm.ai.mcp.method.resource.SyncMcpResourceMethodCallback;
-import org.springframework.yangxm.ai.mcp.provider.tool.SyncMcpToolProvider;
 import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Method;

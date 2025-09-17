@@ -31,7 +31,7 @@ public class SyncMcpToolProvider extends AbstractMcpToolProvider {
         super(toolObjects);
     }
 
-    public List<SyncToolSpec> getToolSpecifications() {
+    public List<SyncToolSpec> getToolSpecs() {
         List<SyncToolSpec> toolSpecs = this.toolObjects.stream()
                 .map(toolObject -> Stream.of(this.doGetClassMethods(toolObject))
                         .filter(method -> method.isAnnotationPresent(McpTool.class))
