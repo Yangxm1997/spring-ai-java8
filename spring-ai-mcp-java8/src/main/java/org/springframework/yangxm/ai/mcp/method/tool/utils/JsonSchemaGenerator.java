@@ -3,6 +3,7 @@ package org.springframework.yangxm.ai.mcp.method.tool.utils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.victools.jsonschema.generator.Module;
 import com.github.victools.jsonschema.generator.Option;
@@ -18,6 +19,9 @@ import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema;
 import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema.CallToolRequest;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpAsyncServerExchange;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpSyncServerExchange;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.yangxm.ai.mcp.annotation.McpMeta;
+import org.springframework.yangxm.ai.mcp.annotation.McpProgressToken;
 import org.springframework.yangxm.ai.mcp.annotation.McpToolParam;
 import org.springframework.yangxm.ai.util.Assert;
 import org.springframework.yangxm.ai.util.JsonParser;
@@ -70,24 +74,26 @@ public class JsonSchemaGenerator {
     }
 
     private static String internalGenerateFromMethodArguments(Method method) {
-        // Check if method has CallToolRequest parameter
+        // 检查此方法是否有CallToolRequest参数
         boolean hasCallToolRequestParam = Arrays.stream(method.getParameterTypes())
                 .anyMatch(CallToolRequest.class::isAssignableFrom);
 
-        // If method has CallToolRequest, return minimal schema
+        // 如果此方法有CallToolRequest参数，返回最小化的schema
         if (hasCallToolRequestParam) {
-            // Check if there are other parameters besides CallToolRequest, exchange
-            // types,
-            // @McpProgressToken annotated parameters, and McpMeta parameters
-            boolean hasOtherParams = Arrays.stream(method.getParameters()).anyMatch(param -> {
-                Class<?> type = param.getType();
-                return !CallToolRequest.class.isAssignableFrom(type)
-                        && !McpSyncServerExchange.class.isAssignableFrom(type)
-                        && !McpAsyncServerExchange.class.isAssignableFrom(type)
-                        && !param.isAnnotationPresent(McpProgressToken.class) && !McpMeta.class.isAssignableFrom(type);
-            });
+            // 检查除了CallToolRequest，是否还含有以下类型的参数
+            // McpSyncServerExchange, McpAsyncServerExchange
+            // @McpProgressToken, McpMeta
+            boolean hasOtherParams = Arrays.stream(method.getParameters())
+                    .anyMatch(param -> {
+                        Class<?> type = param.getType();
+                        return !CallToolRequest.class.isAssignableFrom(type)
+                                && !McpSyncServerExchange.class.isAssignableFrom(type)
+                                && !McpAsyncServerExchange.class.isAssignableFrom(type)
+                                && !param.isAnnotationPresent(McpProgressToken.class)
+                                && !McpMeta.class.isAssignableFrom(type);
+                    });
 
-            // If only CallToolRequest (and possibly exchange), return empty schema
+            // 如果只有CallToolRequest，返回空的schema
             if (!hasOtherParams) {
                 ObjectNode schema = JsonParser.getObjectMapper().createObjectNode();
                 schema.put("type", "object");
@@ -109,22 +115,27 @@ public class JsonSchemaGenerator {
             String parameterName = parameter.getName();
             Type parameterType = method.getGenericParameterTypes()[i];
 
-            // Skip parameters annotated with @McpProgressToken
+            // 忽略@McpProgressToken类型的参数
             if (parameter.isAnnotationPresent(McpProgressToken.class)) {
                 continue;
             }
 
-            // Skip McpMeta parameters
-            if (parameterType instanceof Class<?> parameterClass && McpMeta.class.isAssignableFrom(parameterClass)) {
-                continue;
+            // 忽略McpMeta类型的参数
+            if (parameterType instanceof Class<?>) {
+                Class<?> parameterClass = (Class<?>) parameterType;
+                if (McpMeta.class.isAssignableFrom(parameterClass)) {
+                    continue;
+                }
             }
 
-            // Skip special parameter types
-            if (parameterType instanceof Class<?> parameterClass
-                    && (ClassUtils.isAssignable(McpSyncServerExchange.class, parameterClass)
-                    || ClassUtils.isAssignable(McpAsyncServerExchange.class, parameterClass)
-                    || ClassUtils.isAssignable(CallToolRequest.class, parameterClass))) {
-                continue;
+            // 忽略一些特定类型的参数
+            if (parameterType instanceof Class<?>) {
+                Class<?> parameterClass = (Class<?>) parameterType;
+                if (ClassUtils.isAssignable(McpSyncServerExchange.class, parameterClass)
+                        || ClassUtils.isAssignable(McpAsyncServerExchange.class, parameterClass)
+                        || ClassUtils.isAssignable(CallToolRequest.class, parameterClass)) {
+                    continue;
+                }
             }
 
             if (isMethodParameterRequired(method, i)) {
@@ -138,9 +149,8 @@ public class JsonSchemaGenerator {
             properties.set(parameterName, parameterNode);
         }
 
-        var requiredArray = schema.putArray("required");
+        ArrayNode requiredArray = schema.putArray("required");
         required.forEach(requiredArray::add);
-
         return schema.toPrettyString();
     }
 
@@ -190,6 +200,18 @@ public class JsonSchemaGenerator {
             return toolParamAnnotation.required();
         }
 
+        JsonProperty propertyAnnotation = parameter.getAnnotation(JsonProperty.class);
+        if (propertyAnnotation != null) {
+            return propertyAnnotation.required();
+        }
+
+        Schema schemaAnnotation = parameter.getAnnotation(Schema.class);
+        if (schemaAnnotation != null) {
+            return schemaAnnotation.requiredMode() == Schema.RequiredMode.REQUIRED
+                    || schemaAnnotation.requiredMode() == Schema.RequiredMode.AUTO
+                    || schemaAnnotation.required();
+        }
+
         Nullable nullableAnnotation = parameter.getAnnotation(Nullable.class);
         if (nullableAnnotation != null) {
             return false;
@@ -204,6 +226,17 @@ public class JsonSchemaGenerator {
         if (toolParamAnnotation != null && Utils.hasText(toolParamAnnotation.description())) {
             return toolParamAnnotation.description();
         }
+
+        JsonPropertyDescription jacksonAnnotation = parameter.getAnnotation(JsonPropertyDescription.class);
+        if (jacksonAnnotation != null && Utils.hasText(jacksonAnnotation.value())) {
+            return jacksonAnnotation.value();
+        }
+
+        Schema schemaAnnotation = parameter.getAnnotation(Schema.class);
+        if (schemaAnnotation != null && Utils.hasText(schemaAnnotation.description())) {
+            return schemaAnnotation.description();
+        }
+
         return null;
     }
 }

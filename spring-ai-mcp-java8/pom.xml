@@ -16,6 +16,11 @@
         and Spring-friendly abstractions for MCP clients and MCP servers
     </description>
 
+    <properties>
+        <jsonschema.version>4.38.0</jsonschema.version>
+        <swagger-annotations.version>2.2.36</swagger-annotations.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>top.yangxm.ai</groupId>
@@ -41,17 +46,25 @@
         <dependency>
             <groupId>com.github.victools</groupId>
             <artifactId>jsonschema-module-swagger-2</artifactId>
+            <version>${jsonschema.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.github.victools</groupId>
             <artifactId>jsonschema-generator</artifactId>
+            <version>${jsonschema.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>com.github.victools</groupId>
             <artifactId>jsonschema-module-jackson</artifactId>
+            <version>${jsonschema.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+            <version>${swagger-annotations.version}</version>
         </dependency>
     </dependencies>
 

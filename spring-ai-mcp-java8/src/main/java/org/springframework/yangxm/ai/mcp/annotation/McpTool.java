@@ -1,5 +1,7 @@
 package org.springframework.yangxm.ai.mcp.annotation;
 
+import org.springframework.lang.Nullable;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,6 +16,7 @@ public @interface McpTool {
 
     String description() default "";
 
+    @Nullable
     McpAnnotations annotations() default @McpTool.McpAnnotations;
 
     boolean generateOutputSchema() default true;
