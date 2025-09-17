@@ -4,6 +4,9 @@ import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.AsyncCompl
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.AsyncPromptSpec;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.AsyncResourceSpec;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.AsyncToolSpec;
+import org.springframework.yangxm.ai.mcp.provider.complete.AsyncMcpCompleteProvider;
+import org.springframework.yangxm.ai.mcp.provider.prompt.AsyncMcpPromptProvider;
+import org.springframework.yangxm.ai.mcp.provider.resource.AsyncMcpResourceProvider;
 import org.springframework.yangxm.ai.mcp.provider.tool.AsyncMcpToolProvider;
 
 import java.lang.reflect.Method;
@@ -49,7 +52,6 @@ public class AsyncMcpAnnotationProviders {
 
     // RESOURCE
     private final static class SpringAiAsyncMcpResourceProvider extends AsyncMcpResourceProvider {
-
         private SpringAiAsyncMcpResourceProvider(List<Object> resourceObjects) {
             super(resourceObjects);
         }
@@ -62,7 +64,6 @@ public class AsyncMcpAnnotationProviders {
 
     // PROMPT
     private final static class SpringAiAsyncMcpPromptProvider extends AsyncMcpPromptProvider {
-
         private SpringAiAsyncMcpPromptProvider(List<Object> promptObjects) {
             super(promptObjects);
         }
@@ -75,7 +76,6 @@ public class AsyncMcpAnnotationProviders {
 
     // COMPLETE
     private final static class SpringAiAsyncMcpCompleteProvider extends AsyncMcpCompleteProvider {
-
         private SpringAiAsyncMcpCompleteProvider(List<Object> completeObjects) {
             super(completeObjects);
         }

@@ -51,7 +51,6 @@ public final class SyncMcpAnnotationProviders {
 
     // RESOURCE
     private final static class SpringAiSyncMcpResourceProvider extends SyncMcpResourceProvider {
-
         private SpringAiSyncMcpResourceProvider(List<Object> resourceObjects) {
             super(resourceObjects);
         }
@@ -64,7 +63,6 @@ public final class SyncMcpAnnotationProviders {
 
     // PROMPT
     private final static class SpringAiSyncMcpPromptProvider extends SyncMcpPromptProvider {
-
         private SpringAiSyncMcpPromptProvider(List<Object> promptObjects) {
             super(promptObjects);
         }
@@ -77,7 +75,6 @@ public final class SyncMcpAnnotationProviders {
 
     // COMPLETE
     private final static class SpringAiSyncMcpCompleteProvider extends SyncMcpCompleteProvider {
-
         private SpringAiSyncMcpCompleteProvider(List<Object> completeObjects) {
             super(completeObjects);
         }

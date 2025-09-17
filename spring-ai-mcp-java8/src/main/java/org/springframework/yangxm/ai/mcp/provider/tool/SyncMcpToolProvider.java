@@ -2,12 +2,10 @@ package org.springframework.yangxm.ai.mcp.provider.tool;
 
 import io.modelcontextprotocol.yangxm.ai.mcp.logger.Logger;
 import io.modelcontextprotocol.yangxm.ai.mcp.logger.LoggerFactoryHolder;
-import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema.CallToolRequest;
 import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema.CallToolResult;
 import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema.Tool;
 import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema.ToolAnnotations;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.SyncToolSpec;
-import io.modelcontextprotocol.yangxm.ai.mcp.server.McpSyncServerExchange;
 import org.springframework.yangxm.ai.mcp.annotation.McpTool;
 import org.springframework.yangxm.ai.mcp.annotation.McpTool.McpAnnotations;
 import org.springframework.yangxm.ai.mcp.method.tool.ReturnMode;
@@ -20,7 +18,6 @@ import org.springframework.yangxm.ai.util.Utils;
 import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -92,10 +89,9 @@ public class SyncMcpToolProvider extends AbstractMcpToolProvider {
                                     ReturnMode.STRUCTURED :
                                     (methodReturnType == void.class ? ReturnMode.VOID : ReturnMode.TEXT);
 
-                            BiFunction<McpSyncServerExchange, CallToolRequest, CallToolResult> methodCallback =
-                                    new SyncMcpToolMethodCallback(
-                                            returnMode, mcpToolMethod, toolObject, this.doGetToolCallException()
-                                    );
+                            SyncMcpToolMethodCallback methodCallback = new SyncMcpToolMethodCallback(
+                                    returnMode, mcpToolMethod, toolObject, this.doGetToolCallException()
+                            );
 
                             return SyncToolSpec.builder()
                                     .tool(tool)

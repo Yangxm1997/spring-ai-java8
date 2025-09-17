@@ -3,9 +3,6 @@ package org.springframework.yangxm.ai.mcp.provider.tool;
 import io.modelcontextprotocol.yangxm.ai.mcp.logger.Logger;
 import io.modelcontextprotocol.yangxm.ai.mcp.logger.LoggerFactoryHolder;
 import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema;
-import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema.CallToolRequest;
-import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema.CallToolResult;
-import io.modelcontextprotocol.yangxm.ai.mcp.server.McpAsyncServerExchange;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.AsyncToolSpec;
 import org.springframework.yangxm.ai.mcp.annotation.McpTool;
 import org.springframework.yangxm.ai.mcp.method.tool.AsyncMcpToolMethodCallback;
@@ -15,12 +12,10 @@ import org.springframework.yangxm.ai.mcp.method.tool.utils.JsonSchemaGenerator;
 import org.springframework.yangxm.ai.mcp.method.tool.utils.ReactiveUtils;
 import org.springframework.yangxm.ai.mcp.provider.ProviderUtils;
 import org.springframework.yangxm.ai.util.Utils;
-import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -90,10 +85,8 @@ public class AsyncMcpToolProvider extends AbstractMcpToolProvider {
                                     : ReactiveUtils.isReactiveReturnTypeOfVoid(mcpToolMethod) ? ReturnMode.VOID
                                     : ReturnMode.TEXT;
 
-                            BiFunction<McpAsyncServerExchange, CallToolRequest, Mono<CallToolResult>> methodCallback =
-                                    new AsyncMcpToolMethodCallback(
-                                            returnMode, mcpToolMethod, toolObject, this.doGetToolCallException()
-                                    );
+                            AsyncMcpToolMethodCallback methodCallback = new AsyncMcpToolMethodCallback(
+                                    returnMode, mcpToolMethod, toolObject, this.doGetToolCallException());
 
                             return AsyncToolSpec.builder()
                                     .tool(tool)
