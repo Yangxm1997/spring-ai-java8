@@ -57,7 +57,7 @@ public class McpServerSpecificationFactoryAutoConfiguration {
         }
 
         @Bean
-        public List<SyncCompletionSpec> completionSpecs(ServerMcpAnnotatedBeans beansWithMcpMethodAnnotations) {
+        public List<SyncCompletionSpec> completeSpecs(ServerMcpAnnotatedBeans beansWithMcpMethodAnnotations) {
             return SyncMcpAnnotationProviders.completeSpecs(beansWithMcpMethodAnnotations.getBeansByAnnotation(McpComplete.class));
         }
     }
