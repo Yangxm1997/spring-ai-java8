@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>top.yangxm.ai</groupId>
-    <artifactId>spring-ai-parent-java8</artifactId>
+    <artifactId>java8-spring-ai-parent</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>spring-ai-java8</name>
+    <name>Java8 - Spring AI Parent</name>
 
     <description>
         Spring AI for Java 1.8
@@ -14,10 +14,10 @@
         - springframework
     </description>
     <modules>
-        <module>spring-ai-model-java8</module>
-        <module>spring-ai-commons-java8</module>
-        <module>spring-ai-mcp-java8</module>
-        <module>auto-configurations/mcp/spring-ai-autoconfigure-mcp-server-common-java8</module>
+        <module>java8-spring-ai-commons</module>
+        <module>java8-spring-ai-mcp</module>
+        <module>java8-spring-ai-starter-mcp-server</module>
+        <module>java8-spring-ai-starter-mcp-server-webflux</module>
     </modules>
 
     <properties>
