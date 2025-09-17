@@ -2,6 +2,7 @@ package org.springframework.yangxm.ai.mcp.server.common.autoconfigure.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+@SuppressWarnings("unused")
 @ConfigurationProperties(McpServerChangeNotificationProperties.CONFIG_PREFIX)
 public class McpServerChangeNotificationProperties {
     public static final String CONFIG_PREFIX = "spring.ai.mcp.server";

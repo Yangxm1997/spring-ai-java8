@@ -18,6 +18,7 @@ import org.springframework.yangxm.ai.util.Sets;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 @AutoConfiguration
 @ConditionalOnClass(McpTool.class)
 @ConditionalOnProperty(

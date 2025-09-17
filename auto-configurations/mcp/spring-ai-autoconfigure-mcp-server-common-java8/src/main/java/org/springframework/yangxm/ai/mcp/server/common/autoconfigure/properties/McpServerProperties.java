@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 @ConfigurationProperties(McpServerProperties.CONFIG_PREFIX)
 public class McpServerProperties {
     public static final String CONFIG_PREFIX = "spring.ai.mcp.server";

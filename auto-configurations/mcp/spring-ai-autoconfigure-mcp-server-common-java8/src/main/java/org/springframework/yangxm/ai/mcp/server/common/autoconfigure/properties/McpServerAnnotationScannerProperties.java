@@ -2,6 +2,7 @@ package org.springframework.yangxm.ai.mcp.server.common.autoconfigure.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+@SuppressWarnings("unused")
 @ConfigurationProperties(prefix = McpServerAnnotationScannerProperties.CONFIG_PREFIX)
 public class McpServerAnnotationScannerProperties {
     public static final String CONFIG_PREFIX = "spring.ai.mcp.server.annotation-scanner";

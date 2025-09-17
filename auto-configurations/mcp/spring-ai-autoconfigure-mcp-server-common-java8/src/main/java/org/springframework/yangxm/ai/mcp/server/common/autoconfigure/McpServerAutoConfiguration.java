@@ -6,7 +6,6 @@ import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema.Root;
 import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema.ServerCapabilities;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpAsyncServer;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpAsyncServerExchange;
-import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.AsyncCompletionSpec;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.AsyncPromptSpec;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.AsyncResourceSpec;
@@ -31,7 +30,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.core.env.Environment;
-import org.springframework.core.log.LogAccessor;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.support.StandardServletEnvironment;
 import org.springframework.yangxm.ai.logger.Logger;
@@ -40,12 +38,12 @@ import org.springframework.yangxm.ai.mcp.server.common.autoconfigure.properties.
 import org.springframework.yangxm.ai.mcp.server.common.autoconfigure.properties.McpServerProperties;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 @AutoConfiguration(
         afterName = {
                 "org.springframework.ai.mcp.server.common.autoconfigure.ToolCallbackConverterAutoConfiguration",
@@ -162,7 +160,11 @@ public class McpServerAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = McpServerProperties.CONFIG_PREFIX, name = "type", havingValue = "ASYNC")
+    @ConditionalOnProperty(
+            prefix = McpServerProperties.CONFIG_PREFIX,
+            name = "type",
+            havingValue = "ASYNC"
+    )
     public McpAsyncServer mcpAsyncServer(McpServerTransportProvider transportProvider,
                                          ServerCapabilities.Builder capabilitiesBuilder, McpServerProperties serverProperties,
                                          McpServerChangeNotificationProperties changeNotificationProperties,

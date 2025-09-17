@@ -5,6 +5,7 @@ import org.springframework.util.Assert;
 
 import java.time.Duration;
 
+@SuppressWarnings("unused")
 @ConfigurationProperties(McpServerSseProperties.CONFIG_PREFIX)
 public class McpServerSseProperties {
     public static final String CONFIG_PREFIX = "spring.ai.mcp.server";
