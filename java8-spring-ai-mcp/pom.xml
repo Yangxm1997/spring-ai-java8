@@ -23,6 +23,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>top.yangxm.ai</groupId>
+            <artifactId>java8-spring-ai-commons</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
         </dependency>
