@@ -2,14 +2,11 @@ package org.springframework.yangxm.ai.mcp.provider.prompt;
 
 import io.modelcontextprotocol.yangxm.ai.mcp.logger.Logger;
 import io.modelcontextprotocol.yangxm.ai.mcp.logger.LoggerFactoryHolder;
-import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema;
 import io.modelcontextprotocol.yangxm.ai.mcp.schema.McpSchema.Prompt;
-import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.SyncPromptSpec;
 import org.springframework.yangxm.ai.mcp.adapter.PromptAdapter;
 import org.springframework.yangxm.ai.mcp.annotation.McpPrompt;
 import org.springframework.yangxm.ai.mcp.method.prompt.SyncMcpPromptMethodCallback;
-import org.springframework.yangxm.ai.mcp.provider.resource.SyncMcpResourceProvider;
 import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Method;

@@ -1,9 +1,10 @@
 package org.springframework.yangxm.ai.mcp.annotation.spring;
 
-import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures;
+import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.SyncCompletionSpec;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.SyncPromptSpec;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.SyncResourceSpec;
 import io.modelcontextprotocol.yangxm.ai.mcp.server.McpServerFeatures.SyncToolSpec;
+import org.springframework.yangxm.ai.mcp.provider.complete.SyncMcpCompleteProvider;
 import org.springframework.yangxm.ai.mcp.provider.prompt.SyncMcpPromptProvider;
 import org.springframework.yangxm.ai.mcp.provider.resource.SyncMcpResourceProvider;
 import org.springframework.yangxm.ai.mcp.provider.tool.SyncMcpToolProvider;
@@ -28,6 +29,11 @@ public final class SyncMcpAnnotationProviders {
     // PROMPT
     public static List<SyncPromptSpec> promptSpecs(List<Object> promptObjects) {
         return new SpringAiSyncMcpPromptProvider(promptObjects).getPromptSpecs();
+    }
+
+    // COMPLETE
+    public static List<SyncCompletionSpec> completeSpecs(List<Object> completeObjects) {
+        return new SpringAiSyncMcpCompleteProvider(completeObjects).getCompleteSpecs();
     }
 
 
@@ -61,6 +67,19 @@ public final class SyncMcpAnnotationProviders {
 
         private SpringAiSyncMcpPromptProvider(List<Object> promptObjects) {
             super(promptObjects);
+        }
+
+        @Override
+        protected Method[] doGetClassMethods(Object bean) {
+            return AnnotationProviderUtil.beanMethods(bean);
+        }
+    }
+
+    // COMPLETE
+    private final static class SpringAiSyncMcpCompleteProvider extends SyncMcpCompleteProvider {
+
+        private SpringAiSyncMcpCompleteProvider(List<Object> completeObjects) {
+            super(completeObjects);
         }
 
         @Override
